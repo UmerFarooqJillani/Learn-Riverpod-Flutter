@@ -29,6 +29,16 @@
 - Doesn’t include routing or side-effects by default (but works great with `go_router`, `hooks_riverpod`, etc.)
 
 ## How to Install and Setup Riverpod
+- Package	`flutter_riverpod: ^latest` vs `riverpod: ^latest`
+  - `riverpod`
+    - Pure Dart.
+    - Can be used outside of Flutter — like in Dart-only projects, CLI tools, unit test logic, etc.
+    - You don’t get widgets like `ConsumerWidget`, `ref.watch()` in `build()` unless you also add `flutter_riverpod`.
+  - `flutter_riverpod`
+    - This is the Flutter integration layer.
+    - Includes everything from riverpod, plus Flutter-specific widgets and context-less architecture.
+    - Enables ref.watch, ref.read, ProviderScope, ConsumerWidget, Consumer, HookConsumerWidget, etc.
+  - **In Flutter apps, you only need `flutter_riverpod`, because it already includes riverpod under the hood.**
 1.  Add Dependency in pubspec.yaml:
 ```yaml
 dependencies:
@@ -36,7 +46,27 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1 # Use the latest version
 ```
-2. Import it in .dart
+  - You do not need to add riverpod: separately, flutter_riverpod already includes it.
+2. Import it:
 ```dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 ```
+## Flutter’s Architecture "What’s under the hood"
+Flutter is built with 3 core layers:
+1. **Framework (Dart)**
+    - This is what you write: Widgets, State, BuildContext, setState(), etc.
+    - It's built in Dart and defines UI structure and logic.
+2. **Engine (C++)**
+    - Responsible for rendering, layout, painting, and compositing.
+    - Uses Skia(2D graphics engine that Flutter uses internally for rendering), a high-performance rendering engine, to draw pixels on screen.
+Converts widget tree → render tree → actual pixels.
+3. **Embedder (Platform-Specific)**
+    - Connects Flutter to the underlying OS (Android, iOS, Web, Desktop).
+    - Manages platform-specific tasks: input events, lifecycle, camera, GPS, etc.
+
+### In Simple Words `Under the hood`:
+What Flutter secretly does in the background to make your app run fast, look beautiful, and respond instantly to user input.
+
+## In Riverpod *no `context` needed (unlike `Provider.of`)* ?
+
+
