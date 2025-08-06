@@ -26,7 +26,7 @@
 - Slight learning curve for beginners
 - More **boilerplate** compared to **setState**
 - Misusing `ref.watch` and `ref.read` can cause unnecessary rebuilds if not handled properly
-- Doesn’t include routing or side-effects by default (but works great with `go_router`(), `hooks_riverpod`, etc.)
+- Doesn’t include routing or side-effects by default (but works great with `go_router`, `hooks_riverpod`, etc.)
 
 ## How to Install and Setup Riverpod
 1.  Add Dependency in pubspec.yaml:
