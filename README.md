@@ -68,5 +68,36 @@ Converts widget tree → render tree → actual pixels.
 What Flutter secretly does in the background to make your app run fast, look beautiful, and respond instantly to user input.
 
 ## In Riverpod *no `context` needed (unlike `Provider.of`)* ?
+In traditional Provider, you often have to access data using the BuildContext like this:
+```dart
+final user = Provider.of<User>(context);
+```
+That means:
+- You can only access providers inside a widget’s build method or where you have a `BuildContext`.
+- You can’t access providers in pure Dart classes or `initState()` unless you pass context.
+- **Tight Coupling & Loose Coupling:**
+  - **Tight coupling** refers to a situation where two or more software components are closely connected and depend(strong dependencies) on each other to function properly. 
+  - **Loose coupling**, on the other hand, means that the components are less dependent on each other and can operate more independently(weak dependencies).
+- **Problems with context in Provider:**
+  1. Can't use in initState / dispose directly.
+  2. Harder to test (because you always need a widget tree and context).
+  3. Tight coupling to widgets and build context.
+- **Riverpod solves this:**
+  - In Riverpod, you do NOT need BuildContext to access your providers!
+  - Instead, you use a ref object that is passed to your widget or provider automatically:
+    ```dart
+    final user = ref.watch(userProvider);
+    ```
+  - **Or inside providers:**
+    ```dart
+    String welcomeMessage(ProviderRef ref) {
+      final user = ref.watch(userProvider);
+      return 'Welcome ${user.name}';
+    }
+    ```
+  - **You can use ref:**
+    - In widgets (like ConsumerWidget)
+    - In providers (like Provider, Notifier, FutureProvider, etc.)
+    - In any lifecycle-safe area (even outside widget tree)
 
-
+--- 
