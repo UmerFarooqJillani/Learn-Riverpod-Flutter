@@ -127,7 +127,14 @@ When the provider’s value changes:
 - `ref.listen` (React to change, no rebuild)
     - **Rebuilds UI:** ❌ No	
     - **Triggers callback:** ✅ Yes
-
-
-
-
+## `notifier` in Riverpod
+- The key to updating state inside StateNotifierProvider or StateProvider.
+- In Riverpod, .notifier gives you access to the object that holds and modifies the state.
+- **Why Use `.notifier`?**
+    - Because the value of the provider is read-only via `.watch` or `.read`.
+    - To change state, you must use `.notifier` to access the underlying controller.
+- **Behind the Scenes**<br>
+`.notifier` returns a controller object that:
+    - Has access to `.state`
+    - Can update `.state`
+    - Can expose custom methods (like `increment()`)
