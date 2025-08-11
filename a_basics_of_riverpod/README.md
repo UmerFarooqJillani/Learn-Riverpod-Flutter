@@ -138,3 +138,30 @@ When the provider’s value changes:
     - Has access to `.state`
     - Can update `.state`
     - Can expose custom methods (like `increment()`)
+## `.state` in Riverpod
+- Used to read or write the actual value of a provider, usually inside `.notifier`
+- `.state` holds the current value of a provider.
+- You can:
+    - Read the current state → `final count = ref.watch(counterProvider);`
+    - Update the state → `ref.read(counterProvider.notifier).state++;`
+- It behaves slightly differently depending on the provider type.
+    ```dart
+    // Define the Provider
+    final counterProvider = StateProvider<int>((ref) => 0);
+    // Use in Widget
+    final count = ref.watch(counterProvider); // 👈 read state (int)
+    ref.read(counterProvider.notifier).state++; // 👈 write state (increment)
+    ```
+    - How it works:
+        - `StateProvider<T>` gives access to a `StateController<T>`
+        - You access it with `.notifier`
+        - And use `.state` to **read/write** the value
+```dart
+// Define the Notifier
+class CounterNotifier extends StateNotifier<int> {
+  CounterNotifier() : super(0);
+
+  void increment() => state++;      // 👈 update
+  int get currentCount => state;    // 👈 read
+}
+```
