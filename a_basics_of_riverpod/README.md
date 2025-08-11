@@ -156,12 +156,12 @@ When the provider’s value changes:
         - `StateProvider<T>` gives access to a `StateController<T>`
         - You access it with `.notifier`
         - And use `.state` to **read/write** the value
-```dart
-// Define the Notifier
-class CounterNotifier extends StateNotifier<int> {
-  CounterNotifier() : super(0);
+    ```dart
+    // Define the Notifier
+    class CounterNotifier extends StateNotifier<int> {
+        CounterNotifier() : super(0);
 
-  void increment() => state++;      // 👈 update
-  int get currentCount => state;    // 👈 read
-}
-```
+        void increment() => state++;      // 👈 update
+        int get currentCount => state;    // 👈 read
+    }
+    ```
