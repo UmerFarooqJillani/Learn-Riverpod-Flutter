@@ -1,14 +1,14 @@
 # <p align="center"> a_basics_of_riverpod </p>
 
 ## `Provider` in Riverpod
-Provider is used for read-only values — meaning the data never changes during the app's runtime (or at least you don’t want widgets to update reactively when it does).
+Provider is used for read-only values, meaning the data never changes during the app's runtime (or at least you don’t want widgets to update reactively when it does).
 - **It’s great for:**
     - Constants
     - Services (like AuthService, ThemeService)
     - Derived/computed values
 - **Key Concepts:**
     - `Provider<T>`
-        - Generic type T that defines what type the provider returns
+        - Generic type (T) that defines what type the provider returns
     - `ref.watch()`
         - Rebuilds the widget if the value changes (if applicable)
     - `ref.read()`
