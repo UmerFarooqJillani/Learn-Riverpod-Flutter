@@ -109,7 +109,7 @@ When the provider’s value changes:
 ## `ref.listen` (Respond to Changes Without Rebuilding the Widget)
 - `ref.listen(provider, (previous, next) {})` allows you to react to provider value changes, but it does not rebuild the widget.
 - **When Should You Use ref.listen?**
-    - You want to show a Snackbar	
+    - You want to show a Snackbar
         - Without rebuilding the widget
     - You want to log state changes	
         - Debugging purposes
