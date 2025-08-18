@@ -45,7 +45,7 @@ class CounterScreen extends ConsumerWidget {
 
     //--------------(01)--------------------
     // Reactive read: this widget rebuilds when counter changes
-    // - When i uesed the entire screen rebuilds
+    // - When i used the entire screen rebuilds
     // final count = ref.watch(counterProvider);
     //--------------------------------------
 
