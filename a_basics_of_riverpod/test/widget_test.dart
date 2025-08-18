@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:a_basics_of_riverpod/main.dart';
+import 'package:a_basics_of_riverpod/counter_app/separate_read_writes_state_and_provider/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

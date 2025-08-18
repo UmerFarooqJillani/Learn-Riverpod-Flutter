@@ -1,3 +1,4 @@
+// Define your state (the Provider)
 // counter_provider.dart (you can also put this at top of main.dart for now)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
