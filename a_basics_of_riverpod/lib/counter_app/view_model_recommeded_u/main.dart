@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// ------------------------------
 /// ViewModel: CounterNotifier
 /// ------------------------------
-import 'package:a_basics_of_riverpod/counter_app/view_model/counter_notifier.dart';
+import 'package:a_basics_of_riverpod/counter_app/view_model_recommeded_u/counter_notifier.dart';
 /// ------------------------------
 
 void main() {
