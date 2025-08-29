@@ -362,4 +362,4 @@ Use StateNotifierProvider when you need:
         - **Meaning:** it does not mutate the existing int in place (since you can’t modify an int anyway).
         - Instead, it creates a new int and reassigns it to state.
         - So Riverpod sees state getting a new value, and listeners get notified
-#### 
+### `Notifier & NotifierProvider` 
