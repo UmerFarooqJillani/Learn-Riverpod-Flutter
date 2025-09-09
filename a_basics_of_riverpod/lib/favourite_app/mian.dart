@@ -77,30 +77,48 @@ class HomeScreen extends ConsumerWidget {
                 final itemDetails = node[index];
                 return ListTile(
                   onLongPress: () {
-                    
+                    ref.read(selectedProvider.notifier).state = [
+                      itemDetails.id,
+                      ...selectedItem,
+                    ];
                   },
                   onTap: () {
-
+                    if (selectedItem.isNotEmpty) {
+                      if (selectedItem.contains(itemDetails.id)) {
+                        ref.read(selectedProvider.notifier).state = selectedItem
+                            .where((element) => element != itemDetails.id)
+                            .toList();
+                      } else {
+                        ref.read(selectedProvider.notifier).state = [
+                          itemDetails.id,
+                          ...selectedItem,
+                        ];
+                      }
+                    }
                   },
                   title: Text(itemDetails.name),
-                  leading: IconButton(
-                    onPressed: () {
-                      ref
-                          .read(itemProvider.notifier)
-                          .updateItem(
-                            itemDetails.id,
-                            itemDetails.name,
-                            !itemDetails.favourite,
-                          );
-                    },
+                  leading: selectedItem.isEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            ref
+                                .read(itemProvider.notifier)
+                                .updateItem(
+                                  itemDetails.id,
+                                  itemDetails.name,
+                                  !itemDetails.favourite,
+                                );
+                          },
+                          icon: Icon(
+                            Icons.star,
+                            color: itemDetails.favourite
+                                ? Colors.amber
+                                : Colors.black26,
+                          ),
+                        )
+                      : selectedItem.contains(itemDetails.id)
+                      ? Icon(Icons.check_circle, color: Colors.red)
+                      : Icon(Icons.circle_outlined),
 
-                    icon: Icon(
-                      Icons.star,
-                      color: itemDetails.favourite
-                          ? Colors.amber
-                          : Colors.black26,
-                    ),
-                  ),
                   trailing: Text(
                     "${itemDetails.id.hour}:${itemDetails.id.minute}  ${itemDetails.id.day}/${itemDetails.id.month}/${itemDetails.id.year}",
                     style: TextStyle(fontSize: 12),
@@ -111,6 +129,7 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ref.read(itemProvider.notifier).addItem("");
+          ref.read(selectedProvider.notifier).state = [];
         },
         backgroundColor: Colors.blue[400],
         hoverColor: Colors.blue[300],
