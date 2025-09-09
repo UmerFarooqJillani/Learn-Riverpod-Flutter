@@ -17,9 +17,17 @@ class ItemsNotifier extends StateNotifier<List<Items>> {
 
   void removeItem(List<DateTime> id) {
     // Remove item
-    for (int i = 0; i < id.length; i++) {
-      state = state.where((element) => element.id != id[i]).toList();
-    }
+    /*
+    -> problem: 
+       For N items, you create new lists N times.
+    */
+    // for (int i = 0; i < id.length; i++) {
+    //   state = state.where((element) => element.id != id[i]).toList();
+    // }
+    //--------------------------------------------
+    final idSet = id.toSet();
+    state = state.where((item) => !idSet.contains(item.id)).toList();
+    //---------------------------------------------
     return;
   }
 
