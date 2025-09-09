@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
     final visibleItems = filter == FilterType.all
         ? node
         : node.where((item) => item.favourite).toList();
-        
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -85,9 +85,9 @@ class HomeScreen extends ConsumerWidget {
               ),
             )
           : ListView.builder(
-              itemCount: node.length,
+              itemCount: visibleItems.length,
               itemBuilder: (context, index) {
-                final itemDetails = node[index];
+                final itemDetails = visibleItems[index];
                 return ListTile(
                   onLongPress: () {
                     ref.read(selectedProvider.notifier).state = [
