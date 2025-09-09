@@ -42,12 +42,18 @@ class HomeScreen extends ConsumerWidget {
             Row(
               children: [
                 IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                PopupMenuButton(
+                PopupMenuButton<FilterType>(
                   padding: EdgeInsets.only(right: 9),
+                  onSelected: (value) {
+                    ref.read(filterProvider.notifier).state = value;
+                  },
                   itemBuilder: (context) => [
-                    PopupMenuItem(value: "Delete", child: Text("All items")),
                     PopupMenuItem(
-                      value: "Edit",
+                      value: FilterType.all,
+                      child: Text("All items"),
+                    ),
+                    PopupMenuItem(
+                      value: FilterType.favourite,
                       child: Text("Favourite items"),
                     ),
                   ],
@@ -75,6 +81,8 @@ class HomeScreen extends ConsumerWidget {
               itemCount: node.length,
               itemBuilder: (context, index) {
                 final itemDetails = node[index];
+                // final filter = ref.watch(filterProvider);
+
                 return ListTile(
                   onLongPress: () {
                     ref.read(selectedProvider.notifier).state = [
@@ -118,7 +126,6 @@ class HomeScreen extends ConsumerWidget {
                       : selectedItem.contains(itemDetails.id)
                       ? Icon(Icons.check_circle, color: Colors.red)
                       : Icon(Icons.circle_outlined),
-
                   trailing: Text(
                     "${itemDetails.id.hour}:${itemDetails.id.minute}  ${itemDetails.id.day}/${itemDetails.id.month}/${itemDetails.id.year}",
                     style: TextStyle(fontSize: 12),

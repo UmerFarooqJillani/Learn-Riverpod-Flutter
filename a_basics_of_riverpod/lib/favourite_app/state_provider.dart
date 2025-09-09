@@ -34,6 +34,11 @@ class ItemsNotifier extends StateNotifier<List<Items>> {
     }).toList();
   }
 }
+
 // -------------------------
 final selectedProvider = StateProvider<List<DateTime>>((ref) => []);
+
 // -------------------------
+enum FilterType { all, favourite }
+
+final filterProvider = StateProvider<FilterType>((ref) => FilterType.all);
