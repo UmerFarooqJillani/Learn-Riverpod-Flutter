@@ -17,6 +17,7 @@ class ItemsNotifier extends StateNotifier<List<Items>> {
 
   void removeItem(List<DateTime> id) {
     // Remove item
+    //-------------------------------------------
     /*
     -> problem: 
        For N items, you create new lists N times.
