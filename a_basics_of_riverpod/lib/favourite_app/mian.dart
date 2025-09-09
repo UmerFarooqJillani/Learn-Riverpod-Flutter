@@ -28,7 +28,13 @@ class HomeScreen extends ConsumerWidget {
     debugPrint("1- app build");
     final node = ref.watch(itemProvider);
     final selectedItem = ref.watch(selectedProvider);
+    final filter = ref.watch(filterProvider);
 
+    // filter list based on selection
+    final visibleItems = filter == FilterType.all
+        ? node
+        : node.where((item) => item.favourite).toList();
+        
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -70,7 +76,8 @@ class HomeScreen extends ConsumerWidget {
             ),
         ],
       ),
-      body: node.isEmpty
+
+      body: visibleItems.isEmpty
           ? Center(
               child: Text(
                 "No Data Found",
@@ -81,8 +88,6 @@ class HomeScreen extends ConsumerWidget {
               itemCount: node.length,
               itemBuilder: (context, index) {
                 final itemDetails = node[index];
-                // final filter = ref.watch(filterProvider);
-
                 return ListTile(
                   onLongPress: () {
                     ref.read(selectedProvider.notifier).state = [
@@ -133,10 +138,12 @@ class HomeScreen extends ConsumerWidget {
                 );
               },
             ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(itemProvider.notifier).addItem("");
-          ref.read(selectedProvider.notifier).state = [];
+          ref.read(itemProvider.notifier).addItem(""); // Create New node
+          ref.read(selectedProvider.notifier).state =
+              []; // remove the deleted item list
         },
         backgroundColor: Colors.blue[400],
         hoverColor: Colors.blue[300],
