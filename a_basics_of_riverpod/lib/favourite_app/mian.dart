@@ -99,7 +99,6 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () {
                     showTodoPopup(
                       context,
-                      ref,
                       existingTitle: itemDetails.name,
                       existingDescription: itemDetails.description,
                       onSave: (title, description) {
@@ -162,7 +161,6 @@ class HomeScreen extends ConsumerWidget {
         onPressed: () {
           showTodoPopup(
             context,
-            ref,
             onSave: (title, description) {
               ref.read(itemProvider.notifier).addItem(title, description);
             },
@@ -173,7 +171,7 @@ class HomeScreen extends ConsumerWidget {
         },
         backgroundColor: Colors.blue[400],
         hoverColor: Colors.blue[300],
-        child: const Icon(Icons.add, color: Colors.white),  
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

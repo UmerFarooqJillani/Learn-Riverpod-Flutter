@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> showTodoPopup(
-  BuildContext context,
-  WidgetRef ref, {
+  BuildContext context, {
   String? existingTitle,
   String? existingDescription,
-  required void Function(String title, String description) onSave, // callback fnc
+  required void Function(String title, String description)
+  onSave, // callback fnc
 }) {
   final titleController = TextEditingController(text: existingTitle ?? "");
-  final descriptionController = TextEditingController(text: existingDescription ?? "");
+  final descriptionController = TextEditingController(
+    text: existingDescription ?? "",
+  );
 
   return showDialog(
     context: context,
@@ -24,17 +25,13 @@ Future<void> showTodoPopup(
             TextField(
               controller: titleController,
               maxLines: 1,
-              decoration: const InputDecoration(
-                helperText: "Title",
-              ),
+              decoration: const InputDecoration(helperText: "Title"),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: descriptionController,
               maxLines: 4,
-              decoration: const InputDecoration(
-                helperText: "Description",
-              ),
+              decoration: const InputDecoration(helperText: "Description"),
             ),
           ],
         ),
@@ -42,7 +39,10 @@ Future<void> showTodoPopup(
           IconButton(
             icon: const Icon(Icons.add_task),
             onPressed: () {
-              onSave(titleController.text, descriptionController.text); // call-back fnc
+              onSave(
+                titleController.text,
+                descriptionController.text,
+              ); // call-back fnc
               Navigator.of(context).pop(); // close popup
             },
           ),
