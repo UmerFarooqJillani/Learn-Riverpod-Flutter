@@ -1,3 +1,4 @@
+import 'package:a_basics_of_riverpod/favourite_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -96,6 +97,23 @@ class HomeScreen extends ConsumerWidget {
                     ];
                   },
                   onTap: () {
+                    showTodoPopup(
+                      context,
+                      ref,
+                      existingTitle: itemDetails.name,
+                      existingDescription: itemDetails.description,
+                      onSave: (title, description) {
+                        ref
+                            .read(itemProvider.notifier)
+                            .updateItem(
+                              itemDetails.id,
+                              title,
+                              itemDetails.favourite,
+                              description,
+                            );
+                      },
+                    );
+
                     if (selectedItem.isNotEmpty) {
                       if (selectedItem.contains(itemDetails.id)) {
                         ref.read(selectedProvider.notifier).state = selectedItem
@@ -119,6 +137,7 @@ class HomeScreen extends ConsumerWidget {
                                   itemDetails.id,
                                   itemDetails.name,
                                   !itemDetails.favourite,
+                                  itemDetails.description,
                                 );
                           },
                           icon: Icon(
@@ -141,13 +160,20 @@ class HomeScreen extends ConsumerWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(itemProvider.notifier).addItem(""); // Create New node
+          showTodoPopup(
+            context,
+            ref,
+            onSave: (title, description) {
+              ref.read(itemProvider.notifier).addItem(title, description);
+            },
+          );
+          // ref.read(itemProvider.notifier).addItem(""); // Create New node
           ref.read(selectedProvider.notifier).state =
               []; // remove the deleted item list
         },
         backgroundColor: Colors.blue[400],
         hoverColor: Colors.blue[300],
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),  
       ),
     );
   }

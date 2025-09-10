@@ -8,9 +8,9 @@ final itemProvider = StateNotifierProvider<ItemsNotifier, List<Items>>((ref) {
 class ItemsNotifier extends StateNotifier<List<Items>> {
   ItemsNotifier() : super([]);
 
-  void addItem(String name) {
+  void addItem(String name, String description){
     // add item
-    final item = Items(name: name, id: DateTime.now(), favourite: false);
+    final item = Items(name: name, id: DateTime.now(), favourite: false, description: description);
     state = [item, ...state];
     return;
   }
@@ -32,11 +32,11 @@ class ItemsNotifier extends StateNotifier<List<Items>> {
     return;
   }
 
-  void updateItem(DateTime id, String name, bool favourite) {
+  void updateItem(DateTime id, String name, bool favourite, String description){
     // Update item
     state = state.map((e) {
       if (e.id == id) {
-        return e.copyWith(name: name, favourite: favourite);
+        return e.copyWith(name: name, favourite: favourite, description: description);
       } else {
         return e;
       }
