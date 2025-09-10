@@ -4,13 +4,25 @@ Future<void> showTodoPopup(
   BuildContext context, {
   String? existingTitle,
   String? existingDescription,
-  required void Function(String title, String description)
-  onSave, // callback fnc
+  required void Function(String title, String description) onSave,
+  /*
+  -> onSave
+    - onSave is a parameter name, not the function itself.
+    - The type of onSave is: "a function that takes two strings and returns nothing".
+    - You provide the actual function when you call showTodoPopup
+  -> How it's work:
+    -> Start
+      - User types something in the Title and Description fields.
+      - User presses the Save button inside the popup.
+    -> Under the hood
+      - Inside the Save button, this happens:
+      - onSave(titleController.text, descriptionController.text);
+        - Meaning: The function you passed in (your logic) gets called,
+        - and the two strings from the text fields are handed over.
+  */
 }) {
   final titleController = TextEditingController(text: existingTitle ?? "");
-  final descriptionController = TextEditingController(
-    text: existingDescription ?? "",
-  );
+  final descriptionController = TextEditingController(text: existingDescription ?? "");
 
   return showDialog(
     context: context,

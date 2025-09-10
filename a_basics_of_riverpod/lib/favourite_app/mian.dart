@@ -162,10 +162,10 @@ class HomeScreen extends ConsumerWidget {
           showTodoPopup(
             context,
             onSave: (title, description) {
+              // When onSave is called, take those two strings and add a new item.
               ref.read(itemProvider.notifier).addItem(title, description);
             },
           );
-          // ref.read(itemProvider.notifier).addItem(""); // Create New node
           ref.read(selectedProvider.notifier).state =
               []; // remove the deleted item list
         },
