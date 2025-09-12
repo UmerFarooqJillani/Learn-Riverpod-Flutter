@@ -373,3 +373,121 @@ Use StateNotifierProvider when you need:
 <div>
 Think of Notifier as your <b>ViewModel (logic + state)</b> with direct access to ref inside the class.</div>
 
+#### Why is this nicer than `StateNotifier`<br>
+**Feature:**
+1. Initialize state
+    - `StateNotifier`
+        - In constructor (super(initial))
+            ```dart
+            class Counter extends StateNotifier<int> {
+            Counter() : super(0); // initialize here
+            void increment() => state++;
+            }
+
+            final counterProvider = StateNotifierProvider<Counter, int>((ref) {
+            return Counter();
+            });
+            ```
+    - `Notifier (v2)`
+        - In build() (cleaner)
+            ```dart
+            class Counter extends Notifier<int> {
+            @override
+            int build() {
+                return 0; // initial state here
+            }
+
+            void increment() => state++;
+            }
+
+            final counterProvider = NotifierProvider<Counter, int>(() {
+            return Counter();
+            });
+            ```
+2. Access to `ref`
+    - `StateNotifier`
+        - You cannot directly access ref inside your class.
+        - If you want dependencies, you must manually pass them:
+            ```dart
+            class Counter extends StateNotifier<int> {
+            Counter(this.other) : super(0);
+
+            final String other;
+            }
+
+            final counterProvider = StateNotifierProvider<Counter, int>((ref) {
+            final other = ref.watch(otherProvider);
+            return Counter(other); // must inject manually
+            });
+            ```
+    - `Notifier (v2)`
+        - Available inside class
+            ```dart
+            class Counter extends Notifier<int> {
+            @override
+            int build() {
+                final other = ref.watch(otherProvider); // directly available
+                return other.length; // example init
+            }
+
+            void increment() => state++;
+            }
+            ```
+3. React to other providers
+    - `StateNotifier`
+        - You must wire listeners manually:
+            ```dart
+            class Counter extends StateNotifier<int> {
+            Counter(this.ref) : super(0) {
+                ref.listen<int>(otherProvider, (_, next) {
+                state = next; // manually update
+                });
+            }
+
+            final Ref ref;
+            }
+            ```
+    - `Notifier (v2)`
+        - Simply ref.watch(...) in build()
+            ```dart
+            class Counter extends Notifier<int> {
+            @override
+            int build() {
+                final other = ref.watch(otherProvider);
+                return other; // rebuilds automatically
+            }
+            }
+            ```
+4. Recompute when dependencies change
+    - `StateNotifier`
+        - You must update state manually when dependencies change.
+    - `Notifier (v2)`
+        - When `ref.watch()` dependencies change → `build()` is re-executed automatically.
+        - That means your state always stays fresh without extra code.
+5. Async version
+    - `StateNotifier`
+        - You often wrap state in AsyncValue<T> manually:
+            ```dart
+            class UserNotifier extends StateNotifier<AsyncValue<User>> {
+            UserNotifier() : super(const AsyncValue.loading());
+
+            Future<void> loadUser() async {
+                try {
+                final user = await fetchUser();
+                state = AsyncValue.data(user);
+                } catch (e, st) {
+                state = AsyncValue.error(e, st);
+                }
+            }
+            }
+            ```
+    - `Notifier (v2)`
+        - With AsyncNotifier (built-in)
+            ```dart
+            class UserNotifier extends AsyncNotifier<User> {
+            @override
+            Future<User> build() async {
+                return fetchUser(); // handles loading/error automatically
+            }
+            }
+            ```
