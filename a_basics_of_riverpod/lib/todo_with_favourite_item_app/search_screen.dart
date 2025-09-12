@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:a_basics_of_riverpod/favourite_app/state_provider.dart';
+import 'package:a_basics_of_riverpod/todo_with_favourite_item_app/state_provider.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
