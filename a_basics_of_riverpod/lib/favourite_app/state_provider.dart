@@ -51,3 +51,28 @@ final selectedProvider = StateProvider<List<DateTime>>((ref) => []);
 enum FilterType { all, favourite }
 
 final filterProvider = StateProvider<FilterType>((ref) => FilterType.all);
+
+// -------------------------
+final searchQueryProvider = StateProvider<String>((ref) => "");
+
+final visibleItemsProvider = Provider<List<Items>>((ref) {
+  final allItems = ref.watch(itemProvider);
+  final filter = ref.watch(filterProvider);
+  final query = ref.watch(searchQueryProvider);
+
+  // Step 1: filter by favourites
+  var items = filter == FilterType.all
+      ? allItems
+      : allItems.where((item) => item.favourite).toList();
+
+  // Step 2: filter by search
+  if (query.isNotEmpty) {
+    items = items
+        .where((item) =>
+            item.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+
+  return items;
+});
+

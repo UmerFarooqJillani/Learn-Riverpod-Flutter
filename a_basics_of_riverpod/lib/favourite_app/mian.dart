@@ -1,8 +1,9 @@
-import 'package:a_basics_of_riverpod/favourite_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:a_basics_of_riverpod/favourite_app/state_provider.dart';
+import 'package:a_basics_of_riverpod/favourite_app/widgets.dart';
+import 'package:a_basics_of_riverpod/favourite_app/search_screen.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
@@ -48,7 +49,15 @@ class HomeScreen extends ConsumerWidget {
           if (selectedItem.isEmpty)
             Row(
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SearchScreen()),
+                    );
+                  },
+                  icon: Icon(Icons.search),
+                ),
                 PopupMenuButton<FilterType>(
                   padding: EdgeInsets.only(right: 9),
                   onSelected: (value) {
