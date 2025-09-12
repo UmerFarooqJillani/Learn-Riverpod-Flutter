@@ -1,4 +1,4 @@
-import 'package:a_basics_of_riverpod/todo_list_with_crud_operation/model.dart';
+import 'package:a_basics_of_riverpod/state_notifier__todo_list_with_crud_operation/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final itemProvider = StateNotifierProvider<ItemNotifier, List<Item>>((ref) {
