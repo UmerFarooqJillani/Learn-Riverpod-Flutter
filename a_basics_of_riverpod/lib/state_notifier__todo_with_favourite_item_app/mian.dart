@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:a_basics_of_riverpod/todo_with_favourite_item_app/state_provider.dart';
-import 'package:a_basics_of_riverpod/todo_with_favourite_item_app/widgets.dart';
-import 'package:a_basics_of_riverpod/todo_with_favourite_item_app/search_screen.dart';
+import 'package:a_basics_of_riverpod/state_notifier__todo_with_favourite_item_app/state_provider.dart';
+import 'package:a_basics_of_riverpod/state_notifier__todo_with_favourite_item_app/widgets.dart';
+import 'package:a_basics_of_riverpod/state_notifier__todo_with_favourite_item_app/search_screen.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
