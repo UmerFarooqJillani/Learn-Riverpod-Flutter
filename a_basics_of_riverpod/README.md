@@ -362,6 +362,14 @@ Use StateNotifierProvider when you need:
         - **Meaning:** it does not mutate the existing int in place (since you can’t modify an int anyway).
         - Instead, it creates a new int and reassigns it to state.
         - So Riverpod sees state getting a new value, and listeners get notified
-### What are `Notifier` & `NotifierProvider`?
-
+### What are `Notifier` and `NotifierProvider`?
+#### Notifier<T>
+- A logic class that owns a state of type T.
+- You implement a `build()` method that returns the initial state. 
+- Inside `build()` you can `ref.watch(...)` other providers. 
+- You update the state with state = newValue.
+#### NotifierProvider<MyNotifier, T>
+- Exposes your Notifier’s state (T) to the UI and rebuilds listeners when state changes.
+<div>
+Think of Notifier as your <b>ViewModel (logic + state)</b> with direct access to ref inside the class.</div>
 
