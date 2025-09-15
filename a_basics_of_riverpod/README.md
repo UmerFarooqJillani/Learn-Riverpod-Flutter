@@ -433,7 +433,7 @@ Think of Notifier as your <b>ViewModel (logic + state)</b> with direct access to
             void increment() => state++;
             }
             ```
-3. React to other providers
+3. React/Listen to other providers
     - `StateNotifier`
         - You must wire listeners manually:
             ```dart
@@ -491,4 +491,12 @@ Think of Notifier as your <b>ViewModel (logic + state)</b> with direct access to
             }
             }
             ```
+### When to choose which
+- **Notifier:**
+    - synchronous state (counters, models, lists, UI state, players).
+- **AsyncNotifier:**
+    - anything that loads/fetches/streams and naturally fits AsyncValue<T>.
+- **StateNotifier:** 
+    - still fine/valid, but most new code is simpler with Notifier/AsyncNotifier.
+
 
