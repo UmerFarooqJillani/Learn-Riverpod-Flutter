@@ -14,7 +14,7 @@ class MultipliedCounter extends Notifier<int> {
   int build() {
     final base = 1;                         // local initial
     final mul = ref.watch(multiplierProvider); // dependency
-    return base * mul;  // if multiplier changes, build() reruns
+    return base * mul;  // if multiplier changes, build() re-runs
   }
 
   void bump() => state = state + ref.read(multiplierProvider);
