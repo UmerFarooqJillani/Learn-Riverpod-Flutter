@@ -14,3 +14,7 @@ class Counter extends Notifier<int> {
   void increment() => state++;
   void decrement() => state--;
 }
+
+// Why this is nicer: 
+// No need for a constructor that calls super(0). 
+// You define initial state in build() and you already have ref.
