@@ -498,5 +498,3 @@ Think of Notifier as your <b>ViewModel (logic + state)</b> with direct access to
     - anything that loads/fetches/streams and naturally fits AsyncValue<T>.
 - **StateNotifier:** 
     - still fine/valid, but most new code is simpler with Notifier/AsyncNotifier.
-
-
