@@ -52,4 +52,22 @@
     }
     }
     ```
+## `AsyncNotifier` and `AsyncNotifierProvider`
+- A logic class you create that manages `asynchronous` state.
+    - It always exposes state as AsyncValue<T> (Riverpod’s wrapper for loading, data, error).
+    - You implement a build() method to fetch the initial async value.
+    - You can add your own methods (refresh, update, retry, etc.) to handle more logic.
+    - It replaces the old `StateNotifier<AsyncValue<T>>` boilerplate.
+- The provider that creates your `AsyncNotifier`.
+    - It exposes an AsyncValue<T> to your widgets.
+    - Comes in flavors:
+        - `AsyncNotifierProvider` → persistent
+        - `AsyncNotifierProvider.autoDispose` → freed when not in use
+        - `AsyncNotifierProvider.family` → parameterized by arguments (e.g., userId)
+### Why use it?
+- Automatically handles loading/error states (through AsyncValue<T>).
+- Keeps API logic out of the UI (clean architecture).
+- Recomputes automatically when dependencies (ref.watch) change.
+- Perfect for real-world APIs, database queries, search, authentication.
+
 
