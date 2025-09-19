@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:b_advance_with_async/async_notifier_provider.dart';
+import 'package:b_advance_with_async/async_notifier_provider/fetch_user_profile.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
