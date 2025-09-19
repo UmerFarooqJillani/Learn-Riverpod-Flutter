@@ -70,6 +70,13 @@
 - Recomputes automatically when dependencies (ref.watch) change.
 - Perfect for real-world APIs, database queries, search, authentication.
 
-### `FutureProvider` vs. `AsyncNotifier`
+## `FutureProvider` vs. `AsyncNotifier`
 - `FutureProvider` → One async fetch, UI handles result.
 - `AsyncNotifier` → Async fetch + more logic (refresh, retry, update), all in one class.
+
+## What is Consumer?
+- Consumer lets you read/watch providers inside a small part of your tree, so only that part rebuilds when the provider changes.
+- `ref.watch(provider.select((s) => s.field))` → rebuild only when that field changes.
+## `Scoped providers` in Riverpod v2 = overrides with `ProviderScope`
+- In Riverpod, scoping means creating a subtree where a provider has a different implementation/value than the rest of the app. You do this with ProviderScope(overrides: [...]).
+- overrides: [...] Override providers for a subtree ProviderScope constructor
