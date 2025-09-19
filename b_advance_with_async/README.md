@@ -70,4 +70,6 @@
 - Recomputes automatically when dependencies (ref.watch) change.
 - Perfect for real-world APIs, database queries, search, authentication.
 
-
+### `FutureProvider` vs. `AsyncNotifier`
+- `FutureProvider` → One async fetch, UI handles result.
+- `AsyncNotifier` → Async fetch + more logic (refresh, retry, update), all in one class.
