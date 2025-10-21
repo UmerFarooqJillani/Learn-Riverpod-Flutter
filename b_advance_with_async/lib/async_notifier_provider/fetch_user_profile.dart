@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget{
 // 2- build() runs → fetches user → emits AsyncLoading, then AsyncData(User).
 // 3- Widget rebuilds automatically when state changes.
 // 4- If refresh fails, AsyncValue.guard sets state = AsyncError.
-// 5- UI handles all 3 states with .when.
+// 5- UI handles all 3 states with .when
 
 // Imagine you have an API repo ---------------------------------------------
 class User {
