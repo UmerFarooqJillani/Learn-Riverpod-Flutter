@@ -108,4 +108,95 @@
     final link = ref.keepAlive();        // keep it alive temporarily
     Future.delayed(const Duration(seconds: 30), link.close);
 ```
+## `.family` (Parameterized Providers)
+- .family allows you to pass parameters into a provider like:
+    - an ID 
+    - index or type
+    - create multiple independent provider instances of the same logic
+```dart
+final userProvider = FutureProvider.family<String, int>((ref, userId) async {
+  await Future.delayed(const Duration(seconds: 1));
+  return "User #$userId";
+});
+//-----------------------
+ref.watch(userProvider(1)); // → “User #1”
+ref.watch(userProvider(2)); // → “User #2”
+```
+- When each instance goes unused → Riverpod disposes it.<br>
+**Combine with `.family` + `.autoDispose`:**
+```dart
+final audioPlayerProvider =
+  Provider.autoDispose.family<AudioPlayer, String>((ref, letter) {
+    final player = AudioPlayer();
+    ref.onDispose(player.dispose);
+    return player;
+  })
+```
+## `onCancel`, `onDispose`, `onResume` (Lifecycle callbacks)
+### `ref.onCancel()`<br>
+**When it runs**
+- The last listener unsubscribed (widget left the screen). The provider might still be kept alive.<br>
+**Example use**<br>
+- Pause a stream / stop audio
+### `ref.onDispose()`<br>
+**When it runs**
+- Provider is completely destroyed (removed from memory).<br>
+**Example use**<br>
+- Dispose controller / free memory
+###  `ref.onResume()`<br>
+**When it runs**
+- A listener subscribed again after onCancel.<br>
+**Example use**<br>
+- Resume paused audio / reconnect stream
+## `keepAlive()` (Prevent disposal temporarily)
+- Used inside an autoDispose provider when you want to keep it alive for a bit longer (e.g., user might return soon).
+- Use this when:
+    - user flips alphabet pages fast (A → B → A)
+    - network buffers/audio setup expensive
+    - You can **cache** it for a few seconds for smoother UX.
+```dart
+final alphabetAudioProvider =
+  Provider.autoDispose.family<AudioPlayer, String>((ref, letter) {
+    final link = ref.keepAlive(); // 🧠 Prevent autoDispose for a while
+    final player = AudioPlayer();
 
+    ref.onDispose(() {
+      player.dispose();
+      debugPrint('Disposed $letter');
+    });
+
+    // keep for 10 seconds even after user leaves
+    Future.delayed(const Duration(seconds: 10), () {
+      link.close();
+    });
+
+    return player;
+  });
+```
+## `mounted` (Is this provider still alive?)
+- Inside async methods of Notifier or AsyncNotifier, check if the provider is still active before updating state.
+- **Stop errors like:**
+    - Tried to update state after provider was disposed.
+- If user navigates away before `fetchStoriesFromApi()` finishes, `mounted` becomes false → no error, no memory leak.
+```dart
+class StoryNotifier extends AsyncNotifier<List<String>> {
+  @override
+  Future<List<String>> build() async {
+    return [];
+  }
+
+  Future<void> loadStories() async {
+    state = const AsyncLoading();
+    final result = await fetchStoriesFromApi();
+
+    if (!mounted) return; // ✅ Skip if provider is gone
+    state = AsyncData(result);
+  }
+}
+```
+## Example: `A–Z Audio Learning Screen`
+- Each tile (A single row/item in a list) = separate instance (family)
+- Auto-disposed when unused (autoDispose)
+- Pauses/stops properly (onCancel, onDispose)
+- Cached briefly (keepAlive)
+- Safe async updates (mounted inside Notifier)
