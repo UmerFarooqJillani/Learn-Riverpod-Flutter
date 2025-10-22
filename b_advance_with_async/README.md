@@ -80,3 +80,32 @@
 ## `Scoped providers` in Riverpod v2 = overrides with `ProviderScope`
 - In Riverpod, scoping means creating a subtree where a provider has a different implementation/value than the rest of the app. You do this with ProviderScope(overrides: [...]).
 - overrides: [...] Override providers for a subtree ProviderScope constructor
+## `autoDispose` 
+- When no one is listening to that provider anymore (no widgets watch it, and no other providers depend on it), Riverpod automatically disposes the provider and frees its resources.
+- Stop memory leaks (players, streams, controllers).
+- Stop background CPU/battery drain (position timers, buffers).
+- Free file handles/decoders and network connections when user leaves the screen.
+- **Fresh start** when returning to a screen.
+- If you come back later, Riverpod recreates the provider (re-runs its creation/build logic).<br>
+**You can add it to any provider type:**
+```dart
+    StateProvider.autoDispose<T>(...)
+    Provider.autoDispose<T>(...)
+    FutureProvider.autoDispose<T>(...)
+    StreamProvider.autoDispose<T>(...)
+    StateNotifierProvider.autoDispose<Notifier, T>(...)
+    NotifierProvider.autoDispose<Notifier, T>(...)
+    AsyncNotifierProvider.autoDispose<Notifier, T>(...)
+```
+**Handy lifecycle hooks inside an autoDispose provider:**
+```dart
+    ref.onDispose(() { /* cleanup */ });
+    ref.onCancel(() { /* lost last listener but not disposed yet */ });
+    ref.onResume(() { /* got a listener again */ });
+```
+**And you can delay disposal if you want:**
+```dart
+    final link = ref.keepAlive();        // keep it alive temporarily
+    Future.delayed(const Duration(seconds: 30), link.close);
+```
+
