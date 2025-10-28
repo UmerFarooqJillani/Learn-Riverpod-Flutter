@@ -55,9 +55,11 @@ final myProvider = FutureProvider<List<GetApi>>((ref) async {
     } else {
       throw "Something went Wrong";
     }
-  } on ClientException {
+  }on ClientException
+  {
     throw "No Internet";
-  } catch (e) {
+  }
+  catch (e) {
     rethrow;
   }
 });
