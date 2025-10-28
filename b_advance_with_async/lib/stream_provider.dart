@@ -12,7 +12,7 @@ final myProvider = StreamProvider<double>((ref) async* {
 
     currentPrice +=
         random.nextDouble() * 4 - 2; // Random change Between -2 and +2
-    // throw "error";
+    // throw "Error Throw";
     yield double.parse(currentPrice.toStringAsFixed(2));
   }
 });
@@ -38,8 +38,14 @@ class MyApp extends StatelessWidget {
             final pro = ref.watch(myProvider);
             return Center(
               child: pro.when(
+                skipLoadingOnRefresh: false,
                 data: (data) => Text(data.toStringAsFixed(2).toString()),
-                error: (error, stackTrace) => Text(error.toString()),
+                error: (error, stackTrace) => TextButton(
+                  onPressed: () {
+                    ref.invalidate(myProvider);
+                  },
+                  child: Text(error.toString()),
+                ),
                 loading: () => const CircularProgressIndicator(),
               ),
             );
