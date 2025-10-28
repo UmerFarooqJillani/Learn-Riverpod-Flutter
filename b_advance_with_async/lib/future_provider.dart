@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final myProvider = FutureProvider<int>((ref) async {
   await Future.delayed(const Duration(seconds: 2));
-  return 3;
+  throw "Check The Internet Connection";
+  // return 3;
 });
 // ---------------- Starting point ----------------------------
 void main() {
