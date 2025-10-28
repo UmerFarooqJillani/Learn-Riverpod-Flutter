@@ -10,7 +10,8 @@ final myProvider = StreamProvider<double>((ref) async* {
   while (true) {
     await Future.delayed(Duration(seconds: 1));
 
-    currentPrice += random.nextDouble() *4 - 2; // Random change Between -2 and +2
+    currentPrice +=
+        random.nextDouble() * 4 - 2; // Random change Between -2 and +2
     // throw "error";
     yield double.parse(currentPrice.toStringAsFixed(2));
   }
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: Text("Future Provider"), centerTitle: true),
         body: Consumer(
           builder: (context, ref, child) {
-          debugPrint("Build");
+            debugPrint("Build");
             final pro = ref.watch(myProvider);
             return Center(
               child: pro.when(
