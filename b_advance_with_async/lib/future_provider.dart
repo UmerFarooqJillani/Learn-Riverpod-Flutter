@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
             final pro = ref.watch(myProvider);
             return Center(
               child: pro.when(
+                // skipLoadingOnRefresh: false,
                 data: (data) => Text(data.toString()),
                 error: (error, stackTrace) => Text(error.toString()),
                 loading: () => const CircularProgressIndicator(),
