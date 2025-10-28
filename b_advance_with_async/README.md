@@ -13,6 +13,9 @@
 
     // Provider that fetches app version once
     final appVersionProvider = FutureProvider<String>((ref) async {
+    // await Future.delayed(const Duration(seconds: 2));
+    // return "Hello! U F Jillani";
+    //--------------------------------------------
     final info = await PackageInfo.fromPlatform();
     return info.version; // e.g. "1.0.3"
     });
@@ -47,6 +50,7 @@
         return asyncPos.when(
         data: (pos) => Text("Position: ${pos.inSeconds}s"),
         loading: () => const Text("Loading..."),
+        // loading: () => const CircularProgressIndicator(),
         error: (e, st) => Text("Error: $e"),
         );
     }
