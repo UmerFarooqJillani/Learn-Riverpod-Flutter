@@ -48,3 +48,26 @@ without running the app?
 2. Once your project is stable → start writing tests for important providers (API calls, logic, etc.).
 3. Later, you can use ProviderContainer to test everything automatically.
 
+## Scoped Overrides in Riverpod
+- Scoped Overrides let you use different provider values inside a specific part of your app. Perfect for testing, themes, or screen-specific data.
+### Why Use It
+- Use different data or behavior in a specific screen or test.
+- Helps with testing, themes, fake APIs, or debug/demo modes.
+### How It Works
+- Wrap your widget tree (or test) in a new ProviderScope(overrides: [...]).
+```dart
+final apiUrlProvider = Provider((ref) => 'https://real-api.com');
+
+void main() {
+  testWidgets('use fake API', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          apiUrlProvider.overrideWithValue('https://fake-api.com')
+        ],
+        child: const MyApp(),
+      ),
+    );
+  });
+}
+```
