@@ -49,7 +49,7 @@ final myProvider = FutureProvider<List<GetApi>>((ref) async {
     );
     if (response.statusCode == 200) {
       // Status == 200 == OK
-      final List<dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(response.body);    // used te dart:convert to decode
       List<GetApi> getList = data.map((e) => GetApi.fromjson(e)).toList();
       return getList;
     } else {
