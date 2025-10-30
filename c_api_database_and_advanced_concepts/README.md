@@ -337,3 +337,29 @@ try {
   print('❌ Error: $e');
 }
 ```
+## `Dio` package
+- Dio is a powerful HTTP client for Flutter & Dart, it’s like http but with more control.
+- Features:
+  - Base URL configuration
+  - Automatic JSON parsing
+  - Interceptors (for logging, tokens, retry, etc.)
+  - Timeout control
+  - Cancelable requests
+  - Multipart uploads
+  - Built-in FormData
+  - Global error handling
+### Why `Dio` instead of `http`?
+- `http` is simple (good for learning).
+  - ❌ No Interceptors
+  - Limited Timeout
+  - ❌ No Global base URL
+  - ❌ No Retry policy
+  - ❌ No Upload/download progress
+  - ❌ No Request cancellation
+- `dio` is professional-grade (used in large apps, APIs, admin panels, mobile dashboards, etc.)
+  - ✅ Yes Interceptors
+  - ✅ Flexible Timeout
+  - ✅ Built-in Global base URL
+  - ✅ Easy via Interceptors Retry policy
+  - ✅ Built-in Upload/download progress
+  - ✅ Built-in Request cancellation
