@@ -132,3 +132,200 @@
     final isRefreshing = async.isLoading && async.hasValue; // refreshing on top of data
 
     ```
+## Networking and Data
+- Networking simply means your Flutter app talks to the internet to:
+    - Fetch data (GET)
+    - Send data (POST, PUT, DELETE)
+    - Work with APIs (like weather data, login, user profiles, etc.)
+- **Example:**
+    - You open your app → it calls `https://api.openweathermap.org/...` → gets JSON like `{ "temp": 30 }` → shows **Temperature: 30°C** on screen.
+### What do you need to perform network calls?<br>
+In Flutter, you usually use the http package (official and simple).
+- pubspec.yaml: `http: ^1.2.1`
+### Basic Example (Fetch Data from the Internet)<br>
+**sample JSON API:**
+```link
+https://jsonplaceholder.typicode.com/todos/1
+```
+**It's return:**
+```json
+{
+  "userId": 1,
+  "id": 1,
+  "title": "delectus aut autem",
+  "completed": false
+}
+```
+**code:**<br>
+- `Parsing` in Flutter, refers to the process of converting data from one format into a usable form within your application.
+    - Example:
+        ```dart
+            String intString = "123";
+            int number = int.parse(intString); // number will be 123
+
+            String doubleString = "123.45";
+            double decimal = double.parse(doubleString); // decimal will be 123.45
+        ``` 
+```dart
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // For JSON decoding
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Step 1: Store fetched data
+  String title = 'Loading...';
+
+  // Step 2: Create async function to call API
+  Future<void> fetchTodo() async {
+    // Make GET request
+    final response =
+        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+
+    // Check status code
+    if (response.statusCode == 200) {
+      // Convert JSON string to Map
+      final data = json.decode(response.body);
+      setState(() {
+        title = data['title'];
+      });
+    } else {
+      setState(() {
+        title = 'Error: ${response.statusCode}';
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTodo(); // Call API on app start
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Networking Example')),
+        body: Center(child: Text(title)),
+      ),
+    );
+  }
+}
+```
+### Let’s break it down
+- `import 'package:http/http.dart' as http;` (Imports the HTTP library)
+    - Why:
+        - So you can use `http.get`, `http.post`, etc.
+- `Uri.parse(url)` (Converts String → Uri)
+    - Why:
+        - The `http` library only accepts `Uri` type.
+- `await http.get(...)` (Makes an asynchronous request)
+    - Why:
+        - It waits for the server’s response
+- `response.body` (The body (text) returned by the API)
+    - Why: 
+        -  Usually a JSON string  
+- `json.decode()` (Converts JSON → Map<String, dynamic>)
+    - Why: 
+        - Makes it usable in Dart
+### Understanding HTTP Methods (Basic API operations)
+- `GET` (Fetch data)
+    - Example: 
+        -  `http.get(Uri.parse('https://...'))`
+- `POST` (Send new data)
+    - Example: 
+        -  `http.post(Uri.parse('https://...'), body: {...})`
+            ```dart
+            final response = await http.post(
+              Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+              headers: {'Content-Type': 'application/json; charset=UTF-8'},
+              body: jsonEncode({
+                'title': 'Hello',
+                'body': 'This is my first post',
+                'userId': 1,
+              }),
+            );
+            ```
+- `PUT` (Update existing data)
+    - Example: 
+        -  `http.put(Uri.parse('https://...'), body: {...})`
+- `Delete` (Delete data)
+    - Example: 
+        -  `http.delete(Uri.parse('https://...'))`
+### Parsing JSON into Models (Recommended in real projects)
+```dart
+class Todo {
+  final int id;
+  final String title;
+  final bool completed;
+
+  Todo({required this.id, required this.title, required this.completed});
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      id: json['id'],
+      title: json['title'],
+      completed: json['completed'],
+    );
+  }
+}
+```
+**Then:**
+```dart
+final data = json.decode(response.body);
+final todo = Todo.fromJson(data);
+print(todo.title);
+```
+### Use FutureBuilder to show async data in UI
+```dart
+Future<Todo> fetchTodo() async {
+  final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+  if (response.statusCode == 200) {
+    return Todo.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load todo');
+  }
+}
+// ----------------------- UI ---------------------------
+FutureBuilder<Todo>(
+  future: fetchTodo(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator();
+    } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else {
+      return Text('Todo: ${snapshot.data!.title}');
+    }
+  },
+)
+```
+### Handling Errors and Timeouts
+```dart
+try {
+  final response = await http
+      .get(Uri.parse('https://api.fakeurl.com'),)
+      .timeout(const Duration(seconds: 10));
+
+  if (response.statusCode == 200) {
+    print('Data: ${response.body}');
+  } else {
+    print('Server error: ${response.statusCode}');
+  }
+} on TimeoutException {
+  print('⏳ Request timed out');
+} catch (e) {
+  print('❌ Error: $e');
+}
+```
