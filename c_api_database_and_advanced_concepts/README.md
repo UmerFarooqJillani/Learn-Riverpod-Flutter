@@ -62,7 +62,7 @@
     }
     ```
 3. Producing errors safely with `AsyncValue.guard`
-    - AsyncValue.guard replaces manual try/catch by converting thrown errors to AsyncError(e, stackTrace) automatically.
+    - AsyncValue.guard replaces manual **try/catch** by converting thrown errors to AsyncError(e, stackTrace) automatically.
     ```dart
     final userProvider = AsyncNotifierProvider<UserNotifier, User>(UserNotifier.new);
 
@@ -312,6 +312,7 @@ FutureBuilder<Todo>(
 )
 ```
 ### Handling Errors and Timeouts
+- AsyncValue.guard replaces manual **try/catch** by converting thrown errors to AsyncError(e, stackTrace) automatically.
 ```dart
 try {
   final response = await http
