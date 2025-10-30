@@ -143,7 +143,9 @@
 ### APIs? 
 - An API (Application Programming Interface), is a set of defined rules and protocols that allow different software applications to communicate with each other. 
 - It acts as an intermediary, enabling one piece of software to request services or data from another, without needing to understand the internal workings of that other system. 
-
+#### Working with APIs
+- Working with APIs in Flutter involves making HTTP requests to a server and processing the responses. Flutter provides a number of libraries for making HTTP requests, including dart:io and http.
+- The `http` library is a popular choice for making HTTP requests in Flutter, as it is easy to use and provides support for HTTP methods such as GET, POST, PUT, DELETE, and more.
 ### What do you need to perform network calls?<br>
 In Flutter, you usually use the http package (official and simple).
 - pubspec.yaml: `http: ^1.2.1`
