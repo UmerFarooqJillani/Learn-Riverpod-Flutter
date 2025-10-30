@@ -132,13 +132,18 @@
     final isRefreshing = async.isLoading && async.hasValue; // refreshing on top of data
 
     ```
-## Networking and Data (Working with APIs)
+## Networking & APIs
 - Networking simply means your Flutter app talks to the internet to:
     - Fetch data (GET)
     - Send data (POST, PUT, DELETE)
     - Work with APIs (like weather data, login, user profiles, etc.)
 - **Example:**
     - You open your app → it calls `https://api.openweathermap.org/...` → gets JSON like `{ "temp": 30 }` → shows **Temperature: 30°C** on screen.
+    
+### APIs? 
+- An API (Application Programming Interface), is a set of defined rules and protocols that allow different software applications to communicate with each other. 
+- It acts as an intermediary, enabling one piece of software to request services or data from another, without needing to understand the internal workings of that other system. 
+
 ### What do you need to perform network calls?<br>
 In Flutter, you usually use the http package (official and simple).
 - pubspec.yaml: `http: ^1.2.1`
