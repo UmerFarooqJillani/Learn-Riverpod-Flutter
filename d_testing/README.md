@@ -373,3 +373,11 @@ flutter test                         # unit + widget
 flutter test --coverage              # coverage
 flutter test integration_test        # integration
 ```
+**Quick comparisons:**
+- `ProviderScope` makes providers available to all descendant widgets.
+- `ProviderContainer` cannot be used because it’s not part of Flutter’s widget system.
+```dart
+Unit (Providers & logic (no UI)) → Fast Speed Using ProviderContainer (Not using ProviderScope)
+Widget (UI + provider UI (in memory)) → Med Speed Using ProviderScope (Not using ProviderContainer)
+Integration (Full app on device/emulator) → Slow Speed Using ProviderScope (Not using ProviderContainer)
+```
