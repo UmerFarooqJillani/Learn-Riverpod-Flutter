@@ -132,7 +132,7 @@
     final isRefreshing = async.isLoading && async.hasValue; // refreshing on top of data
 
     ```
-## Networking and Data
+## Networking and Data (Working with APIs)
 - Networking simply means your Flutter app talks to the internet to:
     - Fetch data (GET)
     - Send data (POST, PUT, DELETE)
