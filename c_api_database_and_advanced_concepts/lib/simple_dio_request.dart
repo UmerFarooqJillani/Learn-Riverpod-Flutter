@@ -15,18 +15,18 @@ class DioExample extends StatefulWidget {
 class _DioExampleState extends State<DioExample> {
   String title = "Loading...";
 
-  // Step 1: Create Dio object
+  // Step 1: Create Dio object HTTP client.
   final Dio dio = Dio();
 
   // Step 2: Function to call API
   Future<void> fetchData() async {
     try {
-      // API endpoint
+      // API endpoint (Makes an API call and waits for the result.)
       final response = await dio.get('https://jsonplaceholder.typicode.com/todos/1');
 
       // Step 3: Check if successful
       if (response.statusCode == 200) {
-        // Response data is automatically converted to a Map
+        // Response data is automatically converted to a Map (Contains your JSON response.)
         final data = response.data;
 
         setState(() {
@@ -58,3 +58,21 @@ class _DioExampleState extends State<DioExample> {
     );
   }
 }
+// ------------------- POST Request -------------------
+// Future<void> sendData() async {
+//   try {
+//     final response = await dio.post(
+//       'https://jsonplaceholder.typicode.com/posts',
+//       data: {
+//         'title': 'Hello World',
+//         'body': 'This is my first post',
+//         'userId': 1,
+//       },
+//     );
+
+//     print(response.data); // prints JSON response
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+// }
+// ------------------- POST Request -------------------

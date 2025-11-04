@@ -363,3 +363,133 @@ try {
   - ✅ Easy via Interceptors Retry policy
   - ✅ Built-in Upload/download progress
   - ✅ Built-in Request cancellation
+### Create a Dio client (the `HTTP machine`)
+```dart
+import 'package:dio/dio.dart';
+
+Dio createDio({required String baseUrl}) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: const Duration(seconds: 8),
+      receiveTimeout: const Duration(seconds: 20),
+      sendTimeout: const Duration(seconds: 20),
+      responseType: ResponseType.json,
+      followRedirects: true,
+      validateStatus: (code) => code != null && code >= 200 && code < 400,
+      headers: {'Accept': 'application/json'},
+    ),
+  );
+  return dio;
+}
+```
+- `baseUrl:` A prefix added to every request path.
+  - If you call dio.get('/users'), real URL becomes `https://api.example.com/users`.
+- `connectTimeout:` Max time to connect to the server. If the device can’t reach the server in 8s, it throws a timeout error.
+- `receiveTimeout:` Max time to download the response. If server is too slow, this fails.
+- `sendTimeout:` Max time to upload your data (like files) before failing.
+- `responseType: ResponseType.json`: Tells Dio to expect JSON and parse it for you.
+- `followRedirects: true`: If server says “go to another URL,” Dio will follow (e.g., HTTP 302).
+- `validateStatus:` A function to decide which HTTP codes are treated as **success.**
+  - Here, we accept 200–399 as success. 4xx/5xx are considered **errors.**
+- `headers:` Default headers for all requests (e.g., accept JSON).
+  - `headers: { ... }:` Inside BaseOptions, you provide a `Map<String, dynamic>` to the headers property. The keys of this map represent the header names (e.g., 'Authorization', 'Content-Type'), and the values are their corresponding string values.
+#### Why we set these:
+- Timeouts prevent your app from “hanging” forever.
+- A single baseUrl keeps your code short.
+- validateStatus makes it easy to treat 4xx/5xx as errors automatically.
+#### When to change:
+- If your API is slow → increase timeouts.
+- If API returns non-JSON (files) → change responseType to bytes/stream.
+#### Common mistakes:
+- Forgetting baseUrl → you pass full URLs everywhere.
+- Very small timeouts → users on slow networks see errors too often.
+### Making requests (GET / POST / PUT / DELETE) Code
+```dart
+final dio = createDio(baseUrl: 'https://api.example.com');
+
+// GET with query parameters (?page=1)
+final response = await dio.get('/stories', queryParameters: {'page': 1});
+
+// POST JSON body
+final created = await dio.post('/stories', data: {
+  'title': 'Hello',
+  'body': 'World',
+});
+
+// Request with custom headers (only this call)
+await dio.get('/me', options: Options(headers: {'X-Feature': 'beta'}));
+
+// -------- Accessing response -----------------------
+final code = response.statusCode; // 200, 201, ...
+final body = response.data;       // already decoded if JSON
+```
+- `queryParameters:` turns into `?key=value` in the URL.
+- `data:` the JSON body you send in POST/PUT/PATCH.
+- `options.headers:` extra headers just for this one request.
+### Handling errors (DioException)
+- Different errors need different messages and actions (e.g., “check internet,” “retry,” “login again”).
+- Common mistake: 
+  - Catching only Exception and not checking e.type → you don’t know what failed. 
+```dart
+try {
+  await dio.get('/slow-endpoint');
+} on DioException catch (e) {
+  switch (e.type) {
+    case DioExceptionType.connectionTimeout:   // connect took too long
+    case DioExceptionType.receiveTimeout:      // download too slow
+    case DioExceptionType.sendTimeout:         // upload too slow
+      // show "Timed out"
+      break;
+    case DioExceptionType.badResponse:         // server returned 4xx/5xx
+      final status = e.response?.statusCode;   // e.g., 401, 404, 500
+      break;
+    case DioExceptionType.connectionError:     // no internet / socket error
+      break;
+    case DioExceptionType.cancel:              // you cancelled the request
+      break;
+    default:                                   // unknown
+  }
+}
+```
+### Interceptors (code that runs before/after requests)
+- Interceptors are perfect for:
+  - Attaching Authorization token to each request
+  - Logging all requests in debug 
+  - Refreshing token when you get 401
+- Why:
+  - Keeps token logic out of UI/screens.
+  - Automatically adds token to every request.
+```dart
+// ----------- Simple Auth Interceptor ---------------------
+class AuthInterceptor extends Interceptor {
+  final Future<String?> Function() readAccessToken;
+  AuthInterceptor(this.readAccessToken);
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    final token = await readAccessToken();
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+    handler.next(options); // continue
+  }
+}
+// ------------- Register it ----------------------
+dio.interceptors.add(AuthInterceptor(readTokenFromSecureStorage));
+```
+### Token refresh (when server returns 401)
+- If the server says 401 (expired token), we:
+  1. Call /auth/refresh once.
+  2. Save new tokens.
+  3. Retry all failed requests with new token.
+
+### Quick FAQ
+- Why use Dio instead of http?
+  - Dio has interceptors, retries, cancellation, upload/download progress—all built-in. Perfect for real apps.
+- Where do I keep tokens?
+  - In secure storage (never shared_preferences), and attach them using an Auth interceptor.
+- Should I call Dio directly from Widgets?
+  - No. Use a Repository + Providers. Widgets should just watch state.
+
+
