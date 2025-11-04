@@ -452,38 +452,6 @@ try {
   }
 }
 ```
-### Interceptors (code that runs before/after requests)
-- Interceptors are perfect for:
-  - Attaching Authorization token to each request
-  - Logging all requests in debug 
-  - Refreshing token when you get 401
-- Why:
-  - Keeps token logic out of UI/screens.
-  - Automatically adds token to every request.
-```dart
-// ----------- Simple Auth Interceptor ---------------------
-class AuthInterceptor extends Interceptor {
-  final Future<String?> Function() readAccessToken;
-  AuthInterceptor(this.readAccessToken);
-
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await readAccessToken();
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-    handler.next(options); // continue
-  }
-}
-// ------------- Register it ----------------------
-dio.interceptors.add(AuthInterceptor(readTokenFromSecureStorage));
-```
-### Token refresh (when server returns 401)
-- If the server says 401 (expired token), we:
-  1. Call /auth/refresh once.
-  2. Save new tokens.
-  3. Retry all failed requests with new token.
-
 ### Quick FAQ
 - Why use Dio instead of http?
   - Dio has interceptors, retries, cancellation, upload/download progress—all built-in. Perfect for real apps.
