@@ -200,13 +200,17 @@ class StoryNotifier extends AsyncNotifier<List<String>> {
   }
 }
 ```
-## Example: `A–Z Audio Learning Screen`
-- Each tile (A single row/item in a list) = separate instance (family)
-- Auto-disposed when unused (autoDispose)
-- Pauses/stops properly (onCancel, onDispose)
-- Cached briefly (keepAlive)
-- Safe async updates (mounted inside Notifier)
-## Why do we need to check mounted?
+### The Golden Rule
+- Whenever you use await inside a StatefulWidget, ALWAYS check `if (!mounted) return`;
+### Example (Easy to Understand)<br>
+Imagine the widget is a person.<br>
+**mounted = true**<br>
+Person is alive → you can talk to them.<br>
+**mounted = false**<br>
+Person left the room →<br>
+If you still talk to them… you look stupid<br>
+Flutter prevents you from talking to a widget that has already left the screen.<br>
+### Why do we need to check mounted?
 - Because async functions (await) take time.
 - During that time, the screen may change, and your widget may be disposed.
 - When the widget is removed → using:
@@ -219,3 +223,9 @@ class StoryNotifier extends AsyncNotifier<List<String>> {
 ```dart
 Bad state: Using "ref" when widget is unmounted is unsafe.
 ```
+## Example: `A–Z Audio Learning Screen`
+- Each tile (A single row/item in a list) = separate instance (family)
+- Auto-disposed when unused (autoDispose)
+- Pauses/stops properly (onCancel, onDispose)
+- Cached briefly (keepAlive)
+- Safe async updates (mounted inside Notifier)
