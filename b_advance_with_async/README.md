@@ -182,6 +182,8 @@ final alphabetAudioProvider =
 - **Stop errors like:**
     - Tried to update state after provider was disposed.
 - If user navigates away before `fetchStoriesFromApi()` finishes, `mounted` becomes false → no error, no memory leak.
+- **mounted = true → widget is alive on the screen**
+- **mounted = false → widget is removed, destroyed, no longer valid**
 ```dart
 class StoryNotifier extends AsyncNotifier<List<String>> {
   @override
@@ -204,3 +206,16 @@ class StoryNotifier extends AsyncNotifier<List<String>> {
 - Pauses/stops properly (onCancel, onDispose)
 - Cached briefly (keepAlive)
 - Safe async updates (mounted inside Notifier)
+## Why do we need to check mounted?
+- Because async functions (await) take time.
+- During that time, the screen may change, and your widget may be disposed.
+- When the widget is removed → using:
+    - ref.read(...)
+    - setState(...)
+    - context.go(...)
+    - ScaffoldMessenger.of(context)
+    - ANYTHING using context or ref
+- will cause CRASH:
+```dart
+Bad state: Using "ref" when widget is unmounted is unsafe.
+```
