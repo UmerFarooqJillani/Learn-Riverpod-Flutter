@@ -182,6 +182,8 @@ final alphabetAudioProvider =
 - **Stop errors like:**
     - Tried to update state after provider was disposed.
 - If user navigates away before `fetchStoriesFromApi()` finishes, `mounted` becomes false → no error, no memory leak.
+- **mounted = true → widget is alive on the screen**
+- **mounted = false → widget is removed, destroyed, no longer valid**
 ```dart
 class StoryNotifier extends AsyncNotifier<List<String>> {
   @override
@@ -197,6 +199,29 @@ class StoryNotifier extends AsyncNotifier<List<String>> {
     state = AsyncData(result);
   }
 }
+```
+### The Golden Rule
+- Whenever you use await inside a StatefulWidget, ALWAYS check `if (!mounted) return`;
+### Example (Easy to Understand)<br>
+Imagine the widget is a person.<br>
+**mounted = true**<br>
+Person is alive → you can talk to them.<br>
+**mounted = false**<br>
+Person left the room →<br>
+If you still talk to them… you look stupid<br>
+Flutter prevents you from talking to a widget that has already left the screen.<br>
+### Why do we need to check mounted?
+- Because async functions (await) take time.
+- During that time, the screen may change, and your widget may be disposed.
+- When the widget is removed → using:
+    - ref.read(...)
+    - setState(...)
+    - context.go(...)
+    - ScaffoldMessenger.of(context)
+    - ANYTHING using context or ref
+- will cause CRASH:
+```dart
+Bad state: Using "ref" when widget is unmounted is unsafe.
 ```
 ## Example: `A–Z Audio Learning Screen`
 - Each tile (A single row/item in a list) = separate instance (family)
