@@ -117,6 +117,11 @@
     - an ID 
     - index or type
     - create multiple independent provider instances of the same logic
+- Example:
+    - Without .family
+        - One house → everyone shares same room
+    - With .family
+        - Multiple houses → each has its own key (parameter)
 ```dart
 final userProvider = FutureProvider.family<String, int>((ref, userId) async {
   await Future.delayed(const Duration(seconds: 1));
